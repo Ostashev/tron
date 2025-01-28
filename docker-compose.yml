@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  app:
+    build: .
+    ports:
+      - "8089:8089"
+    env_file: .env
+    depends_on:
+      - tron_db
+
+  tron_db:
+    container_name: tron_db
+    image: postgres:13.10
+    env_file: .env
+    environment:
+      POSTGRES_DB: tron
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+
+volumes:
+  db_data:
