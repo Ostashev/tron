@@ -1,6 +1,8 @@
 import tronpy
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from tronpy.exceptions import BadAddress
+from fastapi import HTTPException
 
 from app.models import RequestLog
 from app.schemas.tron import Wallet
@@ -14,14 +16,17 @@ async def get_wallet_info(wallet_address: str) -> Wallet:
     tron = tronpy.Tron()
     try:
         account = tron.get_account(wallet_address)
-        balance = account['balance'] / 10 ** 6
+        balance = account["balance"] / 10 ** 6
 
-        bandwidth = account.get('bandwidth', 0)
-        energy = account.get('energy', 0)
+        bandwidth = account.get("bandwidth", 0)
+        energy = account.get("energy", 0)
         trx_balance = balance
 
         logger.info(f"Данные аккаунта получены: bandwidth={bandwidth}, energy={energy}, trx_balance={trx_balance}")
         return Wallet(bandwidth=bandwidth, energy=energy, trx_balance=trx_balance)
+    except BadAddress as e:
+        logger.error(f"Неверный адрес: {wallet_address}")
+        raise HTTPException(status_code=400, detail="Неверный адрес")
     except Exception as e:
         logger.error(f"Ошибка получения данных аккаунта для {wallet_address}: {e}")
         raise
