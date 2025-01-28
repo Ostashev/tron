@@ -27,7 +27,8 @@ async def get_wallet_info(wallet_address: str) -> Wallet:
         raise
 
 
-async def log_request(wallet_address, bandwidth, energy, trx_balance, session: AsyncSession):
+async def log_request(
+        wallet_address: str, bandwidth: float, energy: float, trx_balance: float, session: AsyncSession) -> RequestLog:
     logger.info(
         f"Логирование запроса: {wallet_address}, bandwidth={bandwidth}, energy={energy}, trx_balance={trx_balance}")
     try:
