@@ -16,6 +16,8 @@
    API_ROOT_PATH=/
    ```
 
+   Склонируйте репозиторий:
+   ```git clone git@github.com:Ostashev/tron.git```
 
    Перейдите в дирректорию:
    ```cd tron```
